@@ -1,0 +1,39 @@
+version: 2
+
+sources:
+  - name: public
+    database: dbt_demo
+    schema: public
+    tables:
+      - name: raw_credit_transactions
+        description: "raw table of credit transactions"
+
+models:
+  - name: stg_credit_transactions
+    description: "treating credit transactions"
+    columns:
+      - name: id
+        description: "primary key of transaction"
+        tests:
+          - not_null
+          - unique
+
+      - name: user_id
+        description: "unique user id from user"
+        tests:
+          - not_null
+
+      - name: amount
+        description: "credit value solicitaded"
+
+      - name: status
+        description: "credit transaction status"
+        tests:
+          - accepted_values:
+              values: ['approved', 'rejected', 'pending']
+
+      - name: created_at
+        description: "transaction datetime of creation"
+
+      - name: is_approved
+        description: "boolean if the transaction is approved or not"
